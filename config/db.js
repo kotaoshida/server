@@ -1,6 +1,7 @@
 
 const mysql  = require('mysql2');
 
+
 const db = mysql.createConnection({
   host     : 'us-cdbr-east-03.cleardb.com',
   user     : "bcbf2f50393783",
