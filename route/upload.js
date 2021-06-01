@@ -33,7 +33,8 @@ router.put("/",(req,res)=>{
 })
 
 router.get("/",(req,res)=>{
-    const username = req.query[0];
+    const username = req.user;
+    console.log(username)
     db.query(`SELECT * FROM saunalog WHERE username = ?`,username,
     (err,result)=>{
         if(err){

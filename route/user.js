@@ -1,43 +1,124 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require("bcrypt")
+const passport = require("passport")
+const flash = require("express-flash")
+const session = require("express-session")
+const app = express()
+const db = require("../config/db")
+var LocalStrategy = require('passport-local').Strategy;
 
 
-const db = require("../config/db");
+app.use(express.urlencoded({ extended: true }));
 
-router.post("/register",(req,res)=>{
+passport.use(new LocalStrategy(async function(username, password, done){
+    console.log(username)
+    db.query("SELECT * FROM user WHERE username = ?",[username]
+        ,async(err,result)=>{
+            const hash = result[0].password
+
+            if (result === null){
+                return done(null,false,{messege:"no user"})
+            }try{
+                if(bcrypt.compare(password,hash)){
+                    
+                    return done(null,username)
+    
+                }else{
+                    return done(null,false,{message:"no password"})}
+            }
+            catch(e){
+                return done(e)
+            }
+    
+        }
+        )
+}));
+
+
+
+app.use(flash());
+app.use(session({
+    secret:"secret",
+    resave:true,
+    saveUninitialized:true,
+    cookie:{
+        secure: false,
+        maxage: 1000 * 60 * 60
+        }
+}))
+app.use(passport.initialize())
+
+
+function isAuthenticated(req, res, next){
+    if (req.isAuthenticated()) {  // 認証済
+        return next();
+    }
+    else {  // 認証されていない
+        console.log("not login")
+       // ログイン画面に遷移
+    }
+}
+
+
+router.post("/register",async (req,res)=>{
+ 
+    try{
     const username = req.body.username;
-    const password = req.body.password;
-
+    const password = await bcrypt.hash(req.body.password,10);
     db.query("INSERT INTO user (username,password) VALUES (?,?);",[username,password],(err,result)=>{
         console.log(err)
         res.send(result)
     })
+    }catch{
+        res.send(result)
+    }
 })
 
-router.post("/login",(req,res)=>{
-    const username = req.body.username;
-    const password = req.body.password;
+router.post("/login",async(req,res,next)=>{
+   await passport.authenticate("local",(err,user,info)=>{
+    if(err) throw err;
+    if(!user){res.send("nouser");
+    console.log(user);}
+    else{
+        req.logIn(user,err=>{
+            if(err)throw err;
+            res.send(user);
+            console.log(req.user);
+        })
+    }
+})(req,res,next);
+})
 
-    db.query(
-        "SELECT * FROM user WHERE username = ?",
-        username,
-        (err,result)=>{
+router.get("/",isAuthenticated,(req,res)=>{
+    const username = req.user;
+    console.log(username)
+    db.query(`SELECT * FROM saunalog WHERE username = ?`,username,
+    (err,result)=>{
         if(err){
-            console.log(err);
+           
+            console.log(err)
+        }else{
+           
+            res.send(result)
         }
-        else if(result){
-            if(result.length<1){
-                res.json({login:false,message:"no user"})
-            }
-            else if(password==result[0].password){
-                res.json({login:true,username:username})
-            }else{
-                res.json({login:false,message:"wrong!"})
-            }
-        } 
-        
-    })
+    }
+    )
 })
+
+passport.serializeUser(function(user, done) {
+    done(null, user);
+});
+
+passport.deserializeUser(function(user, done) {
+    done(null, user);
+});
+
+router.get('/logout', (req, res) => {
+
+    req.session.destroy();
+    console.log("a")
+  });
 
 module.exports = router 
 
