@@ -33,6 +33,6 @@ app.use("/user",userRoute);
 const uploadRoute =require("./route/upload");
 app.use("/upload",uploadRoute);
 
-server.listen(PORT, () => console.log(`Listening on port ${PORT}!`))
+server.listen(process.env.PORT ||PORT, () => console.log(`Listening on port ${PORT}!`))
 
 
