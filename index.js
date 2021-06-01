@@ -15,7 +15,8 @@ const session = require("express-session")
 app.use(session({
   secret:'secret',
   resave:false,
-  saveUninitialized:false
+  saveUninitialized:false,
+  proxy:true
 }))
 app.use(passport.initialize())
 app.use(passport.session())
