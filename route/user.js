@@ -12,7 +12,7 @@ var LocalStrategy = require('passport-local').Strategy;
 
 app.use(express.urlencoded({ extended: true }));
 
-passport.use(new LocalStrategy(async function(username, password, done){
+passport.use(new LocalStrategy(function(username, password, done){
     console.log(username)
     db.query("SELECT * FROM user WHERE username = ?",[username]
         ,async(err,result)=>{
