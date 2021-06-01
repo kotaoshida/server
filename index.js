@@ -12,13 +12,6 @@ const passport = require("passport")
 const session = require("express-session")
 
 
-app.use(session({
-  secret:'secret',
-  resave:false,
-  saveUninitialized:false
-}))
-app.use(passport.initialize())
-
 
 app.use(flash());
 app.use(cors({ origin: ["https://localhost:3000"], credentials: true }));
