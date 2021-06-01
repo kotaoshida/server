@@ -22,8 +22,6 @@ passport.use(new LocalStrategy(function(username, password, done){
                 return done(null,false,{messege:"no user"})
             }try{
                 if(password===result[0].password){
-                    console.log(password)
-                    console.log(result[0].password)
                     return done(null,username)
     
                 }else{
@@ -80,8 +78,7 @@ router.post("/register",async (req,res)=>{
 router.post("/login",async(req,res,next)=>{
    await passport.authenticate("local",(err,user,info)=>{
     if(err) throw err;
-    if(!user){res.send("nouser");
-    console.log(user);}
+    if(!user)res.send("nouser");
     else{
         req.logIn(user,err=>{
             if(err)throw err;
