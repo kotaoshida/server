@@ -22,7 +22,8 @@ passport.use(new LocalStrategy(function(username, password, done){
                 return done(null,false,{messege:"no user"})
             }try{
                 if(password===result[0].password){
-                    
+                    console.log(password)
+                    console.log(result[0].password)
                     return done(null,username)
     
                 }else{
