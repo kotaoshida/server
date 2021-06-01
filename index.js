@@ -1,5 +1,4 @@
 const express = require("express");
-require("express-async-errors");
 const cors = require('cors')
 const app = express()
 const https = require('https')
@@ -12,7 +11,16 @@ const flash = require("connect-flash")
 const passport = require("passport")
 const session = require("express-session")
 
-
+app.use(session({
+  secret:"secret",
+  resave:true,
+  saveUninitialized:true,
+  cookie:{
+      secure: false,
+      maxage: 1000 * 60 * 60
+      }
+}))
+app.use(passport.initialize())
 
 app.use(flash());
 app.use(cors({ origin: ["https://localhost:3000"], credentials: true }));

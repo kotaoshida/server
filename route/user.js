@@ -78,6 +78,7 @@ router.post("/register",async (req,res)=>{
 router.post("/login",async(req,res,next)=>{
    await passport.authenticate("local",(err,user,info)=>{
     // if(err) throw err;
+    console.log(err)
     if(!user)res.send("nouser");
     else{
         req.logIn(user,err=>{
