@@ -11,16 +11,14 @@ const flash = require("connect-flash")
 const passport = require("passport")
 const session = require("express-session")
 
+
 app.use(session({
-  secret:"secret",
-  resave:true,
-  saveUninitialized:true,
-  cookie:{
-      secure: false,
-      maxage: 1000 * 60 * 60
-      }
+  secret:'secret',
+  resave:false,
+  saveUninitialized:false
 }))
 app.use(passport.initialize())
+app.use(passport.session())
 
 app.use(flash());
 app.use(cors({ origin: ["https://localhost:3000"], credentials: true }));
@@ -35,6 +33,6 @@ app.use("/user",userRoute);
 const uploadRoute =require("./route/upload");
 app.use("/upload",uploadRoute);
 
-app.listen(process.env.PORT||PORT, () => console.log(`Listening on port ${PORT}!`))
+app.listen(process.env.PORT, () => console.log(`Listening on port ${PORT}!`))
 
 
