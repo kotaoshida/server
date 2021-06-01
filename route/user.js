@@ -15,13 +15,13 @@ app.use(express.urlencoded({ extended: true }));
 passport.use(new LocalStrategy(function(username, password, done){
     console.log(username)
     db.query("SELECT * FROM user WHERE username = ?",[username]
-        ,async(err,result)=>{
+        ,(err,result)=>{
             const hash = result[0].password
 
             if (result === null){
                 return done(null,false,{messege:"no user"})
             }try{
-                if(bcrypt.compare(password,hash)){
+                if(password===result[0].password){
                     
                     return done(null,username)
     
