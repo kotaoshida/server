@@ -45,7 +45,8 @@ app.use(session({
     proxy:true,
     cookie:{
         secure: true,
-        maxage: 1000 * 60 * 60
+        maxage: 1000 * 60 * 60,
+        sameSite:none
         }
 }))
 app.use(passport.initialize())
