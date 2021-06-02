@@ -11,12 +11,17 @@ const flash = require("connect-flash")
 const passport = require("passport")
 const session = require("express-session")
 
-
+app.set("trust proxy",1);
 app.use(session({
-  secret:'secret',
-  resave:false,
-  saveUninitialized:false,
-  proxy:true
+  secret:"secret",
+  resave:true,
+  saveUninitialized:true,
+  proxy:true,
+  cookie:{
+      secure: true,
+      maxage: 1000 * 60 * 60,
+      sameSite:"none"
+      }
 }))
 app.use(passport.initialize())
 app.use(passport.session())

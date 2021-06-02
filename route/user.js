@@ -35,7 +35,7 @@ passport.use(new LocalStrategy(function(username, password, done){
         )
 }));
 
-
+app.set("trust proxy",1);
 
 app.use(flash());
 app.use(session({
