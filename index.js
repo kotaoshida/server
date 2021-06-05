@@ -27,7 +27,7 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 app.use(flash());
-app.use(cors({ origin: ["https://localhost:3000"], credentials: true }));
+app.use(cors({ origin: ["https://rocky-tundra-42163.herokuapp.com"], credentials: true }));
 
 app.use(express.json());
 
