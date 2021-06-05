@@ -14,13 +14,14 @@ const session = require("express-session")
 app.set("trust proxy",1);
 app.use(session({
   secret:"secret",
-  resave:true,
+  resave:false,
   saveUninitialized:true,
   proxy:true,
   cookie:{
       secure: true,
       maxage: 1000 * 60 * 60,
-      sameSite:"none"
+      sameSite:"none",
+      httpOnly: true
       }
 }))
 app.use(passport.initialize())
