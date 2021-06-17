@@ -11,8 +11,9 @@ router.post("/",(req,res)=>{
     const windrate =req.body.windrate;
     const username=req.body.username;
     const memo = req.body.memo;
-    console.log(saunaroomrate)
-    db.query("INSERT INTO saunalog (sauna,saunaroomrate,waterbathrate,windrate,username,memo) VALUES (?,?,?,?,?,?);",[sauna,saunaroomrate,waterbathrate,windrate,username,memo],(err,result)=>{
+    const totonotta = req.body.totonotta;
+    const date = req.body.date;
+    db.query("INSERT INTO saunalog (sauna,saunaroomrate,waterbathrate,windrate,username,memo,date,totonotta) VALUES (?,?,?,?,?,?,?,?)",[sauna,saunaroomrate,waterbathrate,windrate,username,memo,date,totonotta],(err,result)=>{
         console.log(err)
         res.send(result)
     })
@@ -33,7 +34,7 @@ router.put("/",(req,res)=>{
 })
 
 router.get("/",(req,res)=>{
-    const username = req.user;
+    const username = req.query[0];
     console.log(username)
     db.query(`SELECT * FROM saunalog WHERE username = ?`,username,
     (err,result)=>{

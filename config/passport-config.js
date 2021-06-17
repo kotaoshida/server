@@ -31,5 +31,5 @@ function initialize(passport,confirmUsername){
 
 }
 
-module.exports=initialize
+module.exports =initialize
 
