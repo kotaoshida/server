@@ -10,17 +10,19 @@ app.use(express.urlencoded({ extended: true }));
 
 
 
-router.post("/register",async (req,res)=>{
+router.post("/register",async(req,res)=>{
  
     try{
     const username = req.body.username;
     const password = await bcrypt.hash(req.body.password,10);
-    db.query("INSERT INTO user (username,password) VALUES (?,?);",[username,password],(err,result)=>{
-        console.log(err)
+    db.query("INSERT INTO user (username,password) VALUES (?,?);",[username,password],async(err,result)=>{
+        if(err){
+            res.json({message: "既に存在しているユーザー名です。別の名前を指定してください。"})
+        }
         res.send(result)
     })
     }catch{
-        res.send(result)
+        res.json({message: "既に存在しているユーザー名です。別の名前を指定してください。"})
     }
 })
 
@@ -31,18 +33,18 @@ router.post("/login",(req,res)=>{
     db.query(
         "SELECT * FROM user WHERE username = ?",
         username,
-        (err,result)=>{
+        async(err,result)=>{
         if(err){
             console.log(err);
         }
         else if(result){
             if(result.length<1){
-                res.json({login:false,message:"no user"})
+                res.json({login:false,message:"入力されたユーザーが存在しません。"})
             }
-            else if(password==result[0].password){
+            else if(await bcrypt.compare(password,result[0].password)){
                 res.json({login:true,username:username})
             }else{
-                res.json({login:false,message:"wrong!"})
+                res.json({login:false,message:"パスワードが間違っています。"})
             }
         } 
         
@@ -67,7 +69,8 @@ router.get("/",(req,res)=>{
 
 
 router.get('/logout', (req, res) => {
- console.log("a")
+
+    console.log("a")
   });
 
 module.exports = router 
