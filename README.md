@@ -1,6 +1,10 @@
 # アプリケーション名
 サログ用サーバーアプリケーション
  
+## ローカルサーバーでの起動
+- step1 npm install connect
+- step2 npm start
+ 
 ## 簡単な説明
  サウナーのためのnodesサーバーです。
 
